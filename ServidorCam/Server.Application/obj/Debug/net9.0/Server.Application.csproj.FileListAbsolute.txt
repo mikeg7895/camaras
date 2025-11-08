@@ -1,0 +1,15 @@
+/workspace/ServidorCam/Server.Application/bin/Debug/net9.0/Server.Application.deps.json
+/workspace/ServidorCam/Server.Application/bin/Debug/net9.0/Server.Application.dll
+/workspace/ServidorCam/Server.Application/bin/Debug/net9.0/Server.Application.pdb
+/workspace/ServidorCam/Server.Application/bin/Debug/net9.0/Server.Core.dll
+/workspace/ServidorCam/Server.Application/bin/Debug/net9.0/Server.Core.pdb
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.csproj.AssemblyReference.cache
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.AssemblyInfoInputs.cache
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.AssemblyInfo.cs
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.csproj.CoreCompileInputs.cache
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.A.E7C9053D.Up2Date
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.dll
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/refint/Server.Application.dll
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/Server.Application.pdb
+/workspace/ServidorCam/Server.Application/obj/Debug/net9.0/ref/Server.Application.dll

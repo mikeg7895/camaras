@@ -1,0 +1,297 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:CameraClient.Desktop.ViewModels"
+             xmlns:models="clr-namespace:CameraClient.Desktop.Models"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="CameraClient.Desktop.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel"
+             x:Name="DashboardRoot">
+    
+    <Grid Background="#F5F5F5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="#0078D4" 
+                Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                    <TextBlock Text="🎥" FontSize="28" VerticalAlignment="Center"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Camera Dashboard" 
+                                   FontSize="24" 
+                                   FontWeight="Bold"
+                                   Foreground="White"/>
+                        <TextBlock Text="{Binding CurrentUser.Email}" 
+                                   FontSize="14" 
+                                   Foreground="#E0E0E0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="Logout"
+                        Command="{Binding LogoutCommand}"
+                        Background="#CC0000"
+                        Foreground="White"
+                        Padding="15,8"
+                        CornerRadius="4"
+                        FontWeight="Medium"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Action Bar -->
+            <Border Grid.Row="0" 
+                    Background="White" 
+                    CornerRadius="8" 
+                    Padding="20"
+                    Margin="0,0,0,20"
+                    BoxShadow="0 2 4 0 #20000000">
+                <StackPanel Spacing="16">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                            <TextBlock Text="My Cameras" 
+                                       FontSize="20" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Text="{Binding StatusMessage}" 
+                                       FontSize="14" 
+                                       Foreground="#666"
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                            <Button Content="🔄 Refresh"
+                                    Command="{Binding LoadCamerasCommand}"
+                                    Background="#E0E0E0"
+                                    Padding="15,10"
+                                    CornerRadius="4"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Camera form -->
+                    <Border Background="#F8F8F8"
+                            CornerRadius="6"
+                            Padding="15">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="{Binding FormTitle}"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"/>
+                            <Grid ColumnDefinitions="*,*">
+                                <StackPanel>
+                                    <TextBlock Text="Camera Name"
+                                               FontSize="12"
+                                               Foreground="#666"/>
+                                    <TextBox Text="{Binding CameraName, Mode=TwoWay}"
+                                             Watermark="Enter name"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" 
+                                            Margin="10,0,0,0"
+                                            IsVisible="{Binding !IsEditingCamera}">
+                                    <TextBlock Text="Select Camera Device"
+                                               FontSize="12"
+                                               Foreground="#666"/>
+                                    <ComboBox ItemsSource="{Binding AvailableDeviceCameras}"
+                                              SelectedItem="{Binding SelectedCamera, Mode=TwoWay}"
+                                              HorizontalAlignment="Stretch">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock>
+                                                    <Run Text="{Binding Name}"/>
+                                                    <Run Text=" - " Foreground="#999"/>
+                                                    <Run Text="{Binding Description}" Foreground="#666"/>
+                                                </TextBlock>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button Content="{Binding PrimaryActionLabel}"
+                                        Command="{Binding SaveCameraCommand}"
+                                        Background="#0078D4"
+                                        Foreground="White"
+                                        Padding="15,8"
+                                        CornerRadius="4"
+                                        FontWeight="Medium"/>
+                                <Button Content="Cancel"
+                                        Command="{Binding CancelEditCommand}"
+                                        IsVisible="{Binding IsEditingCamera}"
+                                        Background="#E0E0E0"
+                                        Padding="15,8"
+                                        CornerRadius="4"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Camera List -->
+            <Border Grid.Row="1" 
+                    Background="White" 
+                    CornerRadius="8" 
+                    Padding="20"
+                    BoxShadow="0 2 4 0 #20000000">
+                <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Cameras}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:Camera">
+                                <Border Background="#F9F9F9" 
+                                        CornerRadius="8" 
+                                        Padding="20"
+                                        Margin="0,0,0,15"
+                                        BorderBrush="#E0E0E0"
+                                        BorderThickness="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <!-- Camera Icon -->
+                                        <Border Grid.Column="0" 
+                                                Background="#0078D4" 
+                                                CornerRadius="8"
+                                                Width="60" 
+                                                Height="60"
+                                                Margin="0,0,20,0">
+                                            <TextBlock Text="📹" 
+                                                       FontSize="32" 
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <!-- Camera Info -->
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" 
+                                                       FontSize="18" 
+                                                       FontWeight="SemiBold"/>
+                                            <StackPanel Orientation="Horizontal" 
+                                                        Spacing="10" 
+                                                        Margin="0,5,0,0">
+                                                <TextBlock Text="{Binding Status, StringFormat='Status: {0}'}"
+                                                           FontSize="12"
+                                                           Foreground="#0078D4"/>
+                                                <TextBlock Text="{Binding DeviceIdShort, StringFormat='Device: {0}'}" 
+                                                           FontSize="12" 
+                                                           Foreground="#999"
+                                                           FontFamily="Consolas, Courier New"/>
+                                                <TextBlock Text="{Binding CameraIndex, StringFormat='Index: {0}'}" 
+                                                           FontSize="12" 
+                                                           Foreground="#666"/>
+                                            </StackPanel>
+                                        </StackPanel>
+
+                                        <!-- Actions -->
+                                        <StackPanel Grid.Column="2" 
+                                                    Orientation="Horizontal" 
+                                                    Spacing="10"
+                                                    VerticalAlignment="Center">
+                                            <Button Content="▶️ Start"
+                                                    ToolTip.Tip="Start streaming (only available for cameras on this device)"
+                                                    IsVisible="{Binding BelongsToThisDevice}"
+                                                    Background="#4CAF50"
+                                                    Foreground="White"
+                                                    Padding="12,8"
+                                                    CornerRadius="4"
+                                                    FontWeight="Medium"/>
+                                            <Button Content="✏️"
+                                                    ToolTip.Tip="Edit"
+                                                    Command="{Binding DataContext.EditCameraCommand, ElementName=DashboardRoot}"
+                                                    CommandParameter="{Binding .}"
+                                                    Background="#FF9800"
+                                                    Foreground="White"
+                                                    Padding="12,8"
+                                                    CornerRadius="4"/>
+                                            <Button Content="🗑️"
+                                                    ToolTip.Tip="Delete"
+                                                    Command="{Binding DataContext.DeleteCameraCommand, ElementName=DashboardRoot}"
+                                                    CommandParameter="{Binding .}"
+                                                    Background="#F44336"
+                                                    Foreground="White"
+                                                    Padding="12,8"
+                                                    CornerRadius="4"/>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Loading Indicator -->
+        <ProgressBar Grid.Row="2" 
+                     IsIndeterminate="True" 
+                     IsVisible="{Binding IsLoading}"
+                     Height="4"
+                     Background="Transparent"
+                     Foreground="#0078D4"/>
+
+        <!-- Device Info Footer -->
+        <Border Grid.Row="3" 
+                Background="#E0E0E0" 
+                Padding="15,10"
+                BorderBrush="#CCCCCC"
+                BorderThickness="0,1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15">
+                    <TextBlock Text="🔑" FontSize="14" VerticalAlignment="Center"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="Device ID" 
+                                   FontSize="11" 
+                                   FontWeight="SemiBold"
+                                   Foreground="#666"/>
+                        <TextBlock Text="{Binding DeviceInfo.DeviceId}" 
+                                   FontSize="10" 
+                                   Foreground="#999"
+                                   FontFamily="Consolas, Courier New"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <TextBlock Text="{Binding DeviceInfo.FirstRunMessage}" 
+                               FontSize="10" 
+                               Foreground="#666"
+                               VerticalAlignment="Center"/>
+                    <Button Content="📋"
+                            Command="{Binding DeviceInfo.CopyDeviceIdCommand}"
+                            ToolTip.Tip="Copy Device ID"
+                            Background="Transparent"
+                            Padding="5"
+                            FontSize="12"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+    
+</UserControl>

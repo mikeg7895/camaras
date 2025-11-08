@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Servicio de desarrollo .NET 9
+  devcontainer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: camaras
+    volumes:
+      - ..:/workspace:cached
+      - dotnet-tools:/home/vscode/.dotnet/tools
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000;https://+:5001
+      - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=securitycam;User=root;Password=dev_password;AllowPublicKeyRetrieval=True;SslMode=None;
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+      - "5173:5173"
+    networks:
+      - app-network
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: tail -f /dev/null
+
+  # Servicio de base de datos MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: dev_password
+      MYSQL_DATABASE: securitycam
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: dev_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pdev_password"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
+  dotnet-tools:
+    driver: local

@@ -1,0 +1,11 @@
+/workspace/ServidorCam/Server.Core/bin/Debug/net9.0/Server.Core.deps.json
+/workspace/ServidorCam/Server.Core/bin/Debug/net9.0/Server.Core.dll
+/workspace/ServidorCam/Server.Core/bin/Debug/net9.0/Server.Core.pdb
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.GeneratedMSBuildEditorConfig.editorconfig
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.AssemblyInfoInputs.cache
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.AssemblyInfo.cs
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.csproj.CoreCompileInputs.cache
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.dll
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/refint/Server.Core.dll
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/Server.Core.pdb
+/workspace/ServidorCam/Server.Core/obj/Debug/net9.0/ref/Server.Core.dll
