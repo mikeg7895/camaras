@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using System.Text.Json;
 using Server.Application.Interfaces;
 using Server.Application.Interfaces.Handlers;
@@ -10,7 +11,7 @@ public class CameraCommandHandler(ICameraService cameraService) : ITcpCommandHan
     private readonly ICameraService _cameraService = cameraService;
     public string Command => "CAMERA";
 
-    public async Task<string> HandleAsync(string[] args)
+    public async Task<string> HandleAsync(string[] args, NetworkStream? networkStream = null)
     {
         // Formato esperado:
         // CAMERA|REGISTER|name|location|userId
@@ -97,6 +98,7 @@ public class CameraCommandHandler(ICameraService cameraService) : ITcpCommandHan
         try
         {
             await _cameraService.Delete(cameraId);
+            await _cameraService.SaveChangesAsync();
             return "SUCCESS|Camera deleted successfully";
         }
         catch (Exception ex)

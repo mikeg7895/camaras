@@ -22,6 +22,7 @@ builder.Services.AddApplicationObjects();                          // Applicatio
 
 // Registrar el Background Service que maneja el TCP Server
 builder.Services.AddHostedService<TcpServerHostedService>();
+builder.Services.AddHostedService<VideoWorker>();
 
 var host = builder.Build();
 

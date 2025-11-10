@@ -1,7 +1,7 @@
 using Server.Application.DTOs;
 using Server.Application.Interfaces;
 using Server.Application.Interfaces.Handlers;
-using Server.Core.Domain.Entities;
+using System.Net.Sockets;
 
 namespace Server.Application.Handlers;
 
@@ -12,7 +12,7 @@ public class RegisterCommandHandler(IUserService userService, IAuthService authS
 
     public string Command => "REGISTER";
 
-    public async Task<string> HandleAsync(string[] parameters)
+    public async Task<string> HandleAsync(string[] parameters, NetworkStream? networkStream = null)
     {
         // Formato esperado: REGISTER|username|email|password
         if (parameters.Length < 4)

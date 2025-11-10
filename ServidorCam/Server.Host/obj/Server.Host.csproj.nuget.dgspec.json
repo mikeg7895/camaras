@@ -1,33 +1,39 @@
 {
   "format": 1,
   "restore": {
-    "/workspace/ServidorCam/Server.Host/Server.Host.csproj": {}
+    "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\Server.Host.csproj": {}
   },
   "projects": {
-    "/workspace/ServidorCam/Server.Application/Server.Application.csproj": {
+    "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/ServidorCam/Server.Application/Server.Application.csproj",
+        "projectUniqueName": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj",
         "projectName": "Server.Application",
-        "projectPath": "/workspace/ServidorCam/Server.Application/Server.Application.csproj",
-        "packagesPath": "/home/vscode/.nuget/packages/",
-        "outputPath": "/workspace/ServidorCam/Server.Application/obj/",
+        "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj",
+        "packagesPath": "C:\\Users\\mayko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/vscode/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mayko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/ServidorCam/Server.Core/Server.Core.csproj": {
-                "projectPath": "/workspace/ServidorCam/Server.Core/Server.Core.csproj"
+              "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj": {
+                "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj"
               }
             }
           }
@@ -42,7 +48,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -59,6 +65,18 @@
             "Microsoft.Extensions.DependencyInjection.Abstractions": {
               "target": "Package",
               "version": "[9.0.10, )"
+            },
+            "OpenCvSharp4": {
+              "target": "Package",
+              "version": "[4.11.0.20250507, )"
+            },
+            "OpenCvSharp4.runtime.win": {
+              "target": "Package",
+              "version": "[4.11.0.20250507, )"
+            },
+            "OpenCvSharp4_.runtime.ubuntu.20.04-x64": {
+              "target": "Package",
+              "version": "[4.10.0.20240616, )"
             },
             "Scrutor": {
               "target": "Package",
@@ -81,26 +99,32 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/ServidorCam/Server.Core/Server.Core.csproj": {
+    "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/ServidorCam/Server.Core/Server.Core.csproj",
+        "projectUniqueName": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj",
         "projectName": "Server.Core",
-        "projectPath": "/workspace/ServidorCam/Server.Core/Server.Core.csproj",
-        "packagesPath": "/home/vscode/.nuget/packages/",
-        "outputPath": "/workspace/ServidorCam/Server.Core/obj/",
+        "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj",
+        "packagesPath": "C:\\Users\\mayko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/vscode/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mayko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -119,7 +143,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -140,37 +164,43 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/ServidorCam/Server.Host/Server.Host.csproj": {
+    "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\Server.Host.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/ServidorCam/Server.Host/Server.Host.csproj",
+        "projectUniqueName": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\Server.Host.csproj",
         "projectName": "Server.Host",
-        "projectPath": "/workspace/ServidorCam/Server.Host/Server.Host.csproj",
-        "packagesPath": "/home/vscode/.nuget/packages/",
-        "outputPath": "/workspace/ServidorCam/Server.Host/obj/",
+        "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\Server.Host.csproj",
+        "packagesPath": "C:\\Users\\mayko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/vscode/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mayko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/ServidorCam/Server.Application/Server.Application.csproj": {
-                "projectPath": "/workspace/ServidorCam/Server.Application/Server.Application.csproj"
+              "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj": {
+                "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj"
               },
-              "/workspace/ServidorCam/Server.Infrastructure/Server.Infrastructure.csproj": {
-                "projectPath": "/workspace/ServidorCam/Server.Infrastructure/Server.Infrastructure.csproj"
+              "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\Server.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\Server.Infrastructure.csproj"
               }
             }
           }
@@ -185,7 +215,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -218,37 +248,43 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/workspace/ServidorCam/Server.Infrastructure/Server.Infrastructure.csproj": {
+    "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\Server.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspace/ServidorCam/Server.Infrastructure/Server.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\Server.Infrastructure.csproj",
         "projectName": "Server.Infrastructure",
-        "projectPath": "/workspace/ServidorCam/Server.Infrastructure/Server.Infrastructure.csproj",
-        "packagesPath": "/home/vscode/.nuget/packages/",
-        "outputPath": "/workspace/ServidorCam/Server.Infrastructure/obj/",
+        "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\Server.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\mayko\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/vscode/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mayko\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "/workspace/ServidorCam/Server.Application/Server.Application.csproj": {
-                "projectPath": "/workspace/ServidorCam/Server.Application/Server.Application.csproj"
+              "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj": {
+                "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Application\\Server.Application.csproj"
               },
-              "/workspace/ServidorCam/Server.Core/Server.Core.csproj": {
-                "projectPath": "/workspace/ServidorCam/Server.Core/Server.Core.csproj"
+              "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj": {
+                "projectPath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Core\\Server.Core.csproj"
               }
             }
           }
@@ -263,7 +299,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -300,7 +336,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

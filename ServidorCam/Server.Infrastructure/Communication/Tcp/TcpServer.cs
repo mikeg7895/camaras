@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Server.Application.Interfaces;
+using Server.Application.Interfaces.Handlers;
 
 namespace Server.Infrastructure.Communication.Tcp;
 
@@ -42,59 +44,73 @@ public class TcpServer(IServiceProvider serviceProvider, ILogger<TcpServer> logg
             _logger.LogError(ex, "Error in TCP Server");
         }
     }
-    
+
     private async Task ProcessClientAsync(TcpClient client, CancellationToken cancellationToken)
     {
         var remoteEndPoint = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
-        
         _logger.LogInformation("Client connected from {RemoteEndPoint}", remoteEndPoint);
-        
+
         using var scope = _serviceProvider.CreateScope();
         var requestHandler = scope.ServiceProvider.GetRequiredService<ITcpRequestHandler>();
-        
+
         try
         {
             using var stream = client.GetStream();
-            using var reader = new StreamReader(stream, Encoding.UTF8);
-            using var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
-
-            _logger.LogDebug("Stream configured for {RemoteEndPoint}, waiting for messages", remoteEndPoint);
+            using var writer = new StreamWriter(stream, Encoding.UTF8, leaveOpen: true) { AutoFlush = true };
 
             while (!cancellationToken.IsCancellationRequested && client.Connected)
             {
-                try
+                string? header = await ReadLineAsync(stream, cancellationToken);
+                if (header == null)
                 {
-                    var request = await reader.ReadLineAsync(cancellationToken);
-                    
-                    // Si ReadLineAsync retorna null, el cliente cerró la conexión
-                    if (request == null)
-                    {
-                        _logger.LogInformation("Client {RemoteEndPoint} closed the connection", remoteEndPoint);
-                        break;
-                    }
-
-                    request = request.Trim();
-                    if (string.IsNullOrEmpty(request))
-                        continue;
-
-                    _logger.LogInformation("Request from {RemoteEndPoint}: {Request}", remoteEndPoint, request);
-
-                    var response = await requestHandler.HandleRequestAsync(request);
-                    
-                    _logger.LogInformation("Response to {RemoteEndPoint}: {Response}", remoteEndPoint, response);
-
-                    await writer.WriteLineAsync(response);
-                }
-                catch (IOException ioEx)
-                {
-                    _logger.LogWarning("Client {RemoteEndPoint} disconnected abruptly: {Message}", remoteEndPoint, ioEx.Message);
+                    _logger.LogInformation("Client {RemoteEndPoint} closed the connection", remoteEndPoint);
                     break;
                 }
+
+                // Limpiar BOM (Byte Order Mark) y espacios
+                header = header.Trim().TrimStart('\uFEFF', '\u200B');
+                if (string.IsNullOrEmpty(header)) continue;
+
+                _logger.LogInformation("Request from {RemoteEndPoint}: {Header}", remoteEndPoint, header);
+                var parts = header.Split('|');
+                var cmd = parts[0].ToUpperInvariant();
+
+                string response;
+
+                // Detectar si el comando es FRAMES|UPLOAD
+                if (cmd == "FRAMES" && parts.Length > 1 && parts[1].Equals("UPLOAD", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Obtener todos los handlers registrados
+                    var handlers = scope.ServiceProvider.GetRequiredService<IEnumerable<ITcpCommandHandler>>();
+
+                    // Buscar el que maneja el comando FRAMES
+                    var framesHandler = handlers.FirstOrDefault(h => h.Command == "FRAMES");
+
+                    if (framesHandler is null)
+                    {
+                        response = "ERROR|Handler FRAMES not found";
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Delegating to FramesCommandHandler for {RemoteEndPoint}", remoteEndPoint);
+                        response = await framesHandler.HandleAsync(parts, stream);
+                    }
+                    
+                    _logger.LogInformation("Response to {RemoteEndPoint}: {Response}", remoteEndPoint, response);
+                    await writer.WriteLineAsync(response);
+
+                    // Cerrar conexión tras recibir un video completo
+                    break;
+                }
+                else
+                {
+                    // Comandos normales (texto)
+                    response = await requestHandler.HandleRequestAsync(header);
+                    
+                    _logger.LogInformation("Response to {RemoteEndPoint}: {Response}", remoteEndPoint, response);
+                    await writer.WriteLineAsync(response);
+                }
             }
-        }
-        catch (OperationCanceledException)
-        {
-            _logger.LogInformation("Connection cancelled with {RemoteEndPoint}", remoteEndPoint);
         }
         catch (Exception ex)
         {
@@ -102,20 +118,44 @@ public class TcpServer(IServiceProvider serviceProvider, ILogger<TcpServer> logg
         }
         finally
         {
-            try
-            {
-                client.Close();
-            }
-            catch { }
-            
+            client.Close();
             _logger.LogInformation("Client disconnected: {RemoteEndPoint}", remoteEndPoint);
         }
     }
+
 
     public void Stop()
     {
         _cancellationTokenSource?.Cancel();
         _listener?.Stop();
         _logger.LogInformation("TCP Server detenido");
+    }
+
+    private static async Task<string?> ReadLineAsync(NetworkStream stream, CancellationToken cancellationToken)
+    {
+        var data = new List<byte>(256);
+        var buffer = new byte[1];
+
+        while (true)
+        {
+            int read = await stream.ReadAsync(buffer, 0, 1, cancellationToken);
+            if (read == 0)
+            {
+                return data.Count == 0 ? null : Encoding.UTF8.GetString(data.ToArray());
+            }
+
+            byte value = buffer[0];
+            if (value == (byte)'\n')
+            {
+                break;
+            }
+
+            if (value != (byte)'\r')
+            {
+                data.Add(value);
+            }
+        }
+
+        return Encoding.UTF8.GetString(data.ToArray());
     }
 }

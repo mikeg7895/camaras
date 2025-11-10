@@ -5,4 +5,5 @@ namespace Server.Application.Interfaces;
 public interface ICameraService : IGenericService<Camera>
 {
     Task<IEnumerable<Camera>> GetByUserIdAsync(int userId);
+    Task<Camera?> GetByDeviceIdAsync(Guid deviceId);
 }

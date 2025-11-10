@@ -1,3 +1,4 @@
+using System.Net.Sockets;
 using System.Text.Json;
 using Server.Application.Interfaces;
 using Server.Application.Interfaces.Handlers;
@@ -9,7 +10,7 @@ public class UserCommandHandler(IUserService userService) : ITcpCommandHandler
     private readonly IUserService _userService = userService;
     public string Command => "USER";
 
-    public async Task<string> HandleAsync(string[] args)
+    public async Task<string> HandleAsync(string[] args, NetworkStream? networkStream = null)
     {
         // Formato esperado: 
         // USER|GET|true/false -> Obtener usuarios aprobados/pendientes

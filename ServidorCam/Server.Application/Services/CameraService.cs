@@ -12,4 +12,7 @@ public class CameraService(ICameraRepository repository) : GenericService<Camera
     public async Task<IEnumerable<Camera>> GetByUserIdAsync(int userId) 
         => await _cameraRepository.GetAll().Where(c => c.UserId == userId).ToListAsync();
 
+    public async Task<Camera?> GetByDeviceIdAsync(Guid deviceId) 
+        => await _cameraRepository.GetAll().Where(c => c.DeviceId == deviceId).FirstOrDefaultAsync(); 
+
 }

@@ -6,4 +6,8 @@ namespace Server.Infrastructure.Repositories;
 
 public class ProcessedFrameRepository(ServerDbContext context) : GenericRepository<ProcessedFrame>(context), IProcessedFrameRepository
 {
+    public async Task AddRangeAsync(IEnumerable<ProcessedFrame> valores)
+    {
+        await Entities.AddRangeAsync(valores);
+    }
 }

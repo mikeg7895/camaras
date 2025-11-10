@@ -1,6 +1,7 @@
 using Server.Application.DTOs;
 using Server.Application.Interfaces;
 using Server.Application.Interfaces.Handlers;
+using System.Net.Sockets;
 
 namespace Server.Application.Handlers;
 
@@ -9,7 +10,7 @@ public class LoginCommandHandler(IAuthService authService) : ITcpCommandHandler
     private readonly IAuthService _authService = authService;
     public string Command => "LOGIN";
 
-    public async Task<string> HandleAsync(string[] args)
+    public async Task<string> HandleAsync(string[] args, NetworkStream? networkStream = null)
     {
         if (args.Length < 3) return "ERROR|missing username or password";
 

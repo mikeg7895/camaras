@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Server.Core.Domain.Entities;
 using Server.Core.Domain.Interfaces;
 using Server.Infrastructure.Persistence;

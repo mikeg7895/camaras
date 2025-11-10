@@ -4,5 +4,4 @@ namespace Server.Core.Domain.Interfaces;
 
 public interface ICameraRepository : IGenericRepository<Camera>
 {
-    
 }
