@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using OpenCvSharp;
+using System.Management;
 
 namespace CameraClient.Desktop.Services;
 
@@ -53,12 +54,19 @@ public class CameraDetectionService
     {
         var cameras = new List<DetectedCamera>();
         
-        // Intentar detectar hasta 10 cámaras
-        for (int i = 0; i < 10; i++)
+        Console.WriteLine("Starting camera detection with OpenCV...");
+        
+        // Obtener nombres reales de las cámaras desde Windows
+        var cameraNames = GetWindowsCameraNames();
+        
+        // En Windows, intentar detectar hasta 5 cámaras (raramente hay más)
+        for (int i = 0; i < 5; i++)
         {
             VideoCapture? capture = null;
             try
             {
+                Console.WriteLine($"Attempting to detect camera {i}...");
+                
                 // Intentar abrir la cámara con diferentes backends
                 capture = TryOpenCamera(i);
                 
@@ -69,19 +77,43 @@ public class CameraDetectionService
                     var height = capture.Get(VideoCaptureProperties.FrameHeight);
                     var fps = capture.Get(VideoCaptureProperties.Fps);
                     
+                    // Si FPS es 0, intentar leer un frame para obtener info real
+                    if (fps == 0)
+                    {
+                        fps = 30; // Valor por defecto común
+                    }
+                    
+                    // Obtener el nombre real de la cámara
+                    string cameraName = cameraNames.Count > i ? cameraNames[i] : $"Camera {i}";
+                    string description = $"{width:F0}x{height:F0} @ {fps:F0}fps";
+                    
                     cameras.Add(new DetectedCamera
                     {
                         Index = i,
-                        Name = $"Camera {i}",
-                        Description = $"{GetCameraTypeName(i)} - {width}x{height} @ {fps:F0}fps"
+                        Name = cameraName,
+                        Description = description
                     });
                     
-                    Console.WriteLine($"✓ Detected camera {i}: {width}x{height}");
+                    Console.WriteLine($"✓ Detected camera {i}: {cameraName} - {description}");
+                }
+                else
+                {
+                    Console.WriteLine($"✗ Camera {i} not available");
+                    // Si no encontramos cámaras consecutivas, probablemente no hay más
+                    if (cameras.Count == 0 && i >= 2)
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Camera {i} not available: {ex.Message}");
+                Console.WriteLine($"✗ Camera {i} error: {ex.Message}");
+                // Si fallaron las primeras 2 cámaras, probablemente no hay ninguna
+                if (i >= 2 && cameras.Count == 0)
+                {
+                    break;
+                }
             }
             finally
             {
@@ -90,22 +122,27 @@ public class CameraDetectionService
                     capture?.Release();
                     capture?.Dispose();
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error releasing camera {i}: {ex.Message}");
+                }
             }
+            
+            // Pequeña pausa entre detecciones para evitar problemas
+            System.Threading.Thread.Sleep(100);
         }
         
+        Console.WriteLine($"Camera detection completed. Found {cameras.Count} camera(s)");
         return cameras;
     }
 
     private static VideoCapture? TryOpenCamera(int index)
     {
-        // Lista de backends a intentar en orden de preferencia
+        // Lista de backends a intentar en orden de preferencia para Windows
         var backends = new[]
         {
-            VideoCaptureAPIs.V4L2,      // Linux
-            VideoCaptureAPIs.DSHOW,     // Windows DirectShow
-            VideoCaptureAPIs.MSMF,      // Windows Media Foundation
-            VideoCaptureAPIs.AVFOUNDATION, // macOS
+            VideoCaptureAPIs.DSHOW,     // Windows DirectShow (más compatible)
+            VideoCaptureAPIs.MSMF,      // Windows Media Foundation (más moderno)
             VideoCaptureAPIs.ANY        // Cualquier backend disponible
         };
 
@@ -115,35 +152,99 @@ public class CameraDetectionService
             {
                 var capture = new VideoCapture(index, backend);
                 
-                // Dar tiempo para que se inicialice
-                System.Threading.Thread.Sleep(50);
+                // Dar más tiempo para que se inicialice en Windows
+                System.Threading.Thread.Sleep(200);
                 
                 if (capture.IsOpened())
                 {
-                    Console.WriteLine($"Camera {index} opened with backend: {backend}");
-                    return capture;
+                    // Verificar que realmente puede capturar frames
+                    using var testFrame = new Mat();
+                    if (capture.Read(testFrame) && !testFrame.Empty())
+                    {
+                        Console.WriteLine($"Camera {index} opened successfully with backend: {backend}");
+                        return capture;
+                    }
                 }
                 
                 capture.Dispose();
             }
-            catch
+            catch (Exception ex)
             {
-                // Probar siguiente backend
+                Console.WriteLine($"Failed to open camera {index} with {backend}: {ex.Message}");
             }
         }
 
         return null;
     }
 
-    private static string GetCameraTypeName(int index)
+    private static List<string> GetWindowsCameraNames()
     {
-        return index switch
+        var cameraNames = new List<string>();
+        
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            0 => "Built-in Webcam",
-            1 => "USB Camera",
-            2 => "External Camera",
-            _ => $"Camera Device {index}"
-        };
+            return cameraNames;
+        }
+
+        try
+        {
+            // Usar WMI para obtener los nombres reales de las cámaras en Windows
+            using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPEntity WHERE (PNPClass = 'Image' OR PNPClass = 'Camera')");
+            
+            foreach (ManagementObject device in searcher.Get())
+            {
+                var name = device["Caption"]?.ToString();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    cameraNames.Add(name);
+                    Console.WriteLine($"Found Windows camera device: {name}");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting Windows camera names via WMI: {ex.Message}");
+            
+            // Intentar método alternativo usando DirectShow
+            try
+            {
+                cameraNames = GetCameraNamesViaDirectShow();
+            }
+            catch (Exception ex2)
+            {
+                Console.WriteLine($"Error getting camera names via DirectShow: {ex2.Message}");
+            }
+        }
+
+        return cameraNames;
+    }
+
+    private static List<string> GetCameraNamesViaDirectShow()
+    {
+        var cameraNames = new List<string>();
+        
+        // Este método intenta obtener nombres mediante DirectShow
+        // Como alternativa si WMI falla
+        for (int i = 0; i < 5; i++)
+        {
+            try
+            {
+                using var capture = new VideoCapture(i, VideoCaptureAPIs.DSHOW);
+                if (capture.IsOpened())
+                {
+                    // DirectShow no proporciona el nombre directamente,
+                    // así que usamos un nombre genérico basado en el índice
+                    cameraNames.Add($"Camera {i}");
+                    capture.Release();
+                }
+            }
+            catch
+            {
+                break;
+            }
+        }
+        
+        return cameraNames;
     }
 
     private static List<DetectedCamera> DetectLinuxCamerasManually()
@@ -246,19 +347,16 @@ public class CameraDetectionService
         VideoCapture? capture = null;
         try
         {
+            Console.WriteLine($"Checking availability of camera {cameraIndex}...");
             capture = TryOpenCamera(cameraIndex);
-            return capture != null && capture.IsOpened();
+            var isAvailable = capture != null && capture.IsOpened();
+            Console.WriteLine($"Camera {cameraIndex} is {(isAvailable ? "available" : "not available")}");
+            return isAvailable;
         }
-        catch
+        catch (Exception ex)
         {
-            // Fallback: verificar por sistema operativo
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                var devicePath = $"/dev/video{cameraIndex}";
-                return File.Exists(devicePath);
-            }
-            
-            return cameraIndex >= 0 && cameraIndex < 5;
+            Console.WriteLine($"Error checking camera {cameraIndex}: {ex.Message}");
+            return false;
         }
         finally
         {
@@ -267,7 +365,10 @@ public class CameraDetectionService
                 capture?.Release();
                 capture?.Dispose();
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error releasing camera {cameraIndex}: {ex.Message}");
+            }
         }
     }
 }

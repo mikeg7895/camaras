@@ -210,14 +210,32 @@
                                                     Orientation="Horizontal" 
                                                     Spacing="10"
                                                     VerticalAlignment="Center">
+                                            <!-- Start Recording Button -->
                                             <Button Content="▶️ Start"
-                                                    ToolTip.Tip="Start streaming (only available for cameras on this device)"
+                                                    ToolTip.Tip="Start recording (60-second segments)"
                                                     IsVisible="{Binding BelongsToThisDevice}"
+                                                    IsEnabled="{Binding !IsRecording}"
+                                                    Command="{Binding DataContext.StartRecordingCommand, ElementName=DashboardRoot}"
+                                                    CommandParameter="{Binding .}"
                                                     Background="#4CAF50"
                                                     Foreground="White"
                                                     Padding="12,8"
                                                     CornerRadius="4"
                                                     FontWeight="Medium"/>
+                                            
+                                            <!-- Stop Recording Button -->
+                                            <Button Content="⏹️ Stop"
+                                                    ToolTip.Tip="Stop recording"
+                                                    IsVisible="{Binding BelongsToThisDevice}"
+                                                    IsEnabled="{Binding IsRecording}"
+                                                    Command="{Binding DataContext.StopRecordingCommand, ElementName=DashboardRoot}"
+                                                    CommandParameter="{Binding .}"
+                                                    Background="#F44336"
+                                                    Foreground="White"
+                                                    Padding="12,8"
+                                                    CornerRadius="4"
+                                                    FontWeight="Medium"/>
+                                            
                                             <Button Content="✏️"
                                                     ToolTip.Tip="Edit"
                                                     Command="{Binding DataContext.EditCameraCommand, ElementName=DashboardRoot}"

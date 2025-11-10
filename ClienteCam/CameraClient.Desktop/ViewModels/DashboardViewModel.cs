@@ -25,6 +25,7 @@ public class DashboardViewModel : ViewModelBase, IDisposable
     private Camera? _cameraUnderEdit;
     private bool _isEditingCamera;
     private DetectedCamera? _selectedCamera;
+    private readonly Dictionary<int, VideoRecordingService> _recordingServices = new();
 
     public DashboardViewModel(User user)
     {
@@ -64,6 +65,14 @@ public class DashboardViewModel : ViewModelBase, IDisposable
 
         LogoutCommand = ReactiveCommand.Create(
             ExecuteLogout,
+            outputScheduler: RxApp.MainThreadScheduler);
+
+        StartRecordingCommand = ReactiveCommand.CreateFromTask<Camera>(
+            ExecuteStartRecordingAsync,
+            outputScheduler: RxApp.MainThreadScheduler);
+
+        StopRecordingCommand = ReactiveCommand.CreateFromTask<Camera>(
+            ExecuteStopRecordingAsync,
             outputScheduler: RxApp.MainThreadScheduler);
 
         LoadCamerasCommand.IsExecuting
@@ -121,6 +130,8 @@ public class DashboardViewModel : ViewModelBase, IDisposable
     public ReactiveCommand<Camera, Unit> DeleteCameraCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelEditCommand { get; }
     public ReactiveCommand<Unit, Unit> LogoutCommand { get; }
+    public ReactiveCommand<Camera, Unit> StartRecordingCommand { get; }
+    public ReactiveCommand<Camera, Unit> StopRecordingCommand { get; }
 
     public event EventHandler? LogoutRequested;
 
@@ -299,6 +310,77 @@ public class DashboardViewModel : ViewModelBase, IDisposable
         RaiseLogoutRequested();
     }
 
+    private async Task ExecuteStartRecordingAsync(Camera camera)
+    {
+        if (camera == null || !camera.BelongsToThisDevice)
+        {
+            SetStatusMessage("Cannot start recording: Camera not available on this device");
+            return;
+        }
+
+        if (camera.IsRecording)
+        {
+            SetStatusMessage("Camera is already recording");
+            return;
+        }
+
+        try
+        {
+            SetStatusMessage($"Starting recording for {camera.Name}...");
+
+            // Crear servicio de grabación si no existe
+            if (!_recordingServices.ContainsKey(camera.Id))
+            {
+                _recordingServices[camera.Id] = new VideoRecordingService();
+            }
+
+            var recordingService = _recordingServices[camera.Id];
+            await recordingService.StartRecordingAsync(camera, _currentDeviceId);
+
+            camera.IsRecording = true;
+            SetStatusMessage($"Recording started for {camera.Name} (60-second segments)");
+        }
+        catch (Exception ex)
+        {
+            SetStatusMessage($"Error starting recording: {ex.Message}");
+            Console.WriteLine($"Error starting recording: {ex}");
+        }
+    }
+
+    private async Task ExecuteStopRecordingAsync(Camera camera)
+    {
+        if (camera == null)
+        {
+            return;
+        }
+
+        if (!camera.IsRecording)
+        {
+            SetStatusMessage("Camera is not recording");
+            return;
+        }
+
+        try
+        {
+            SetStatusMessage($"Stopping recording for {camera.Name}...");
+
+            if (_recordingServices.TryGetValue(camera.Id, out var recordingService))
+            {
+                await recordingService.StopRecordingAsync();
+                recordingService.Dispose();
+                _recordingServices.Remove(camera.Id);
+            }
+
+            camera.IsRecording = false;
+            SetStatusMessage($"Recording stopped for {camera.Name}");
+        }
+        catch (Exception ex)
+        {
+            SetStatusMessage($"Error stopping recording: {ex.Message}");
+            Console.WriteLine($"Error stopping recording: {ex}");
+        }
+    }
+
     private bool ValidateCameraForm()
     {
         if (string.IsNullOrWhiteSpace(CameraName))
@@ -349,6 +431,14 @@ public class DashboardViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        // Detener todas las grabaciones
+        foreach (var service in _recordingServices.Values)
+        {
+            service.StopRecordingAsync().Wait();
+            service.Dispose();
+        }
+        _recordingServices.Clear();
+
         _cameraService.Dispose();
         GC.SuppressFinalize(this);
     }

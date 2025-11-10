@@ -16,6 +16,7 @@
           "Avalonia.Themes.Fluent": "11.3.8",
           "OpenCvSharp4": "4.10.0.20240616",
           "OpenCvSharp4.runtime.win": "4.10.0.20240616",
+          "System.Management": "9.0.10",
           "System.Net.Http.Json": "9.0.0"
         },
         "runtime": {
@@ -80,17 +81,17 @@
           "runtimes/win-arm64/native/av_libglesv2.dll": {
             "rid": "win-arm64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.1.25606.0"
           },
           "runtimes/win-x64/native/av_libglesv2.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.1.25606.0"
           },
           "runtimes/win-x86/native/av_libglesv2.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2.1.25606.0"
           }
         }
       },
@@ -406,7 +407,7 @@
           "runtimes/win-x64/native/opencv_videoio_ffmpeg4100_64.dll": {
             "rid": "win-x64",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2024.5.0.0"
           },
           "runtimes/win-x86/native/OpenCvSharpExtern.dll": {
             "rid": "win-x86",
@@ -416,7 +417,7 @@
           "runtimes/win-x86/native/opencv_videoio_ffmpeg4100.dll": {
             "rid": "win-x86",
             "assetType": "native",
-            "fileVersion": "0.0.0.0"
+            "fileVersion": "2024.5.0.0"
           }
         }
       },
@@ -509,8 +510,35 @@
           }
         }
       },
+      "System.CodeDom/9.0.10": {
+        "runtime": {
+          "lib/net9.0/System.CodeDom.dll": {
+            "assemblyVersion": "9.0.0.0",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
       "System.ComponentModel.Annotations/5.0.0": {},
       "System.IO.Pipelines/8.0.0": {},
+      "System.Management/9.0.10": {
+        "dependencies": {
+          "System.CodeDom": "9.0.10"
+        },
+        "runtime": {
+          "lib/net9.0/System.Management.dll": {
+            "assemblyVersion": "9.0.0.10",
+            "fileVersion": "9.0.1025.47515"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net9.0/System.Management.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "9.0.0.10",
+            "fileVersion": "9.0.1025.47515"
+          }
+        }
+      },
       "System.Memory/4.5.5": {},
       "System.Net.Http.Json/9.0.0": {},
       "System.Reactive/6.0.1": {
@@ -765,6 +793,13 @@
       "path": "splat/15.1.1",
       "hashPath": "splat.15.1.1.nupkg.sha512"
     },
+    "System.CodeDom/9.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-00dAIR9Zx+F+AaipjaQmudX3VVpzYvT0bKVD3WcJq6om6pKNrldnp5bSR0VV6IlwDBa1HObGD+sTFaT/I9bBng==",
+      "path": "system.codedom/9.0.10",
+      "hashPath": "system.codedom.9.0.10.nupkg.sha512"
+    },
     "System.ComponentModel.Annotations/5.0.0": {
       "type": "package",
       "serviceable": true,
@@ -778,6 +813,13 @@
       "sha512": "sha512-FHNOatmUq0sqJOkTx+UF/9YK1f180cnW5FVqnQMvYUN0elp6wFzbtPSiqbo1/ru8ICp43JM1i7kKkk6GsNGHlA==",
       "path": "system.io.pipelines/8.0.0",
       "hashPath": "system.io.pipelines.8.0.0.nupkg.sha512"
+    },
+    "System.Management/9.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-kJY2C6MjKSqfRkEnc8gn4Jth81Anrgxxpu0MffjEadfpp0Ll/gdGpYnDhRWZd+iFttkfZC0uCjFmCrZARRqq4w==",
+      "path": "system.management/9.0.10",
+      "hashPath": "system.management.9.0.10.nupkg.sha512"
     },
     "System.Memory/4.5.5": {
       "type": "package",
