@@ -113,3 +113,5 @@ C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\bin\Debug\
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\obj\Debug\net9.0\Server.D.800E8AF4.Up2Date
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\obj\Debug\net9.0\Server.Desktop.genruntimeconfig.cache
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\obj\Debug\net9.0\ref\Server.Desktop.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\bin\Debug\net9.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Desktop\bin\Debug\net9.0\StackExchange.Redis.dll

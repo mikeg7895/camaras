@@ -11,13 +11,17 @@ namespace CameraClient.Desktop.Services;
 
 public class VideoRecordingService : IDisposable
 {
+    private readonly TcpConnectionService _connectionService;
     private CancellationTokenSource? _recordingCancellation;
     private Task? _recordingTask;
     private bool _isRecording;
-    private readonly string _serverHost = "127.0.0.1"; // Cambiar según configuración
-    private readonly int _serverPort = 5000; // Cambiar según configuración
 
     public bool IsRecording => _isRecording;
+
+    public VideoRecordingService(TcpConnectionService connectionService)
+    {
+        _connectionService = connectionService;
+    }
 
     public async Task StartRecordingAsync(Camera camera, Guid deviceId)
     {
@@ -226,56 +230,39 @@ public class VideoRecordingService : IDisposable
     private async Task SendVideoToServerAsync(Guid deviceId, int cameraId, string videoPath)
     {
         TcpClient? client = null;
-        NetworkStream? stream = null;
+        StreamWriter? writer = null;
+        StreamReader? reader = null;
 
         try
         {
             var fileInfo = new FileInfo(videoPath);
             var fileLength = fileInfo.Length;
-
-            Console.WriteLine($"Connecting to server {_serverHost}:{_serverPort}...");
-
-            client = new TcpClient();
-            await client.ConnectAsync(_serverHost, _serverPort);
-            stream = client.GetStream();
-
-            Console.WriteLine("Connected. Sending command...");
-
-            // Enviar comando: FRAMES|UPLOAD|deviceId|cameraId|length
-            var command = $"FRAMES|UPLOAD|{deviceId}|{cameraId}|{fileLength}\n";
-            var commandBytes = Encoding.UTF8.GetBytes(command);
-            await stream.WriteAsync(commandBytes);
-            await stream.FlushAsync();
-
             Console.WriteLine($"Sending video file ({fileLength} bytes)...");
 
-            // Enviar el contenido del archivo
-            await using var fileStream = File.OpenRead(videoPath);
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            long totalSent = 0;
+            var serverHost = _connectionService.GetServerHost();
+            client = new TcpClient();
+            await client.ConnectAsync(serverHost, 5000);
 
-            while ((bytesRead = await fileStream.ReadAsync(buffer)) > 0)
+            var networkStream = client.GetStream();
+            writer = new StreamWriter(networkStream, Encoding.UTF8, leaveOpen: true) { AutoFlush = true };
+            reader = new StreamReader(networkStream, Encoding.UTF8, leaveOpen: true);
+
+            var command = $"FRAMES|UPLOAD|{deviceId}|{cameraId}|{fileLength}";
+            await writer.WriteLineAsync(command);
+
+            await using (var fileStream = File.OpenRead(videoPath))
             {
-                await stream.WriteAsync(buffer.AsMemory(0, bytesRead));
-                totalSent += bytesRead;
-                
-                // Mostrar progreso cada 1MB
-                if (totalSent % (1024 * 1024) == 0)
+                byte[] buffer = new byte[8192];
+                int bytesRead;
+                while ((bytesRead = await fileStream.ReadAsync(buffer, 0, buffer.Length)) > 0)
                 {
-                    Console.WriteLine($"Sent {totalSent / 1024 / 1024}MB / {fileLength / 1024 / 1024}MB");
+                    await networkStream.WriteAsync(buffer.AsMemory(0, bytesRead));
                 }
             }
 
-            await stream.FlushAsync();
+            await networkStream.FlushAsync();
 
-            Console.WriteLine($"Video sent successfully ({totalSent} bytes)");
-
-            // Leer respuesta del servidor
-            buffer = new byte[1024];
-            bytesRead = await stream.ReadAsync(buffer);
-            var response = Encoding.UTF8.GetString(buffer, 0, bytesRead).Trim();
-            
+            var response = await reader.ReadLineAsync();
             Console.WriteLine($"Server response: {response}");
         }
         catch (Exception ex)
@@ -285,7 +272,8 @@ public class VideoRecordingService : IDisposable
         }
         finally
         {
-            stream?.Close();
+            reader?.Dispose();
+            writer?.Dispose();
             client?.Close();
         }
     }

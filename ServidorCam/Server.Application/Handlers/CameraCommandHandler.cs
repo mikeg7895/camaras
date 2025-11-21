@@ -57,7 +57,14 @@ public class CameraCommandHandler(ICameraService cameraService) : ITcpCommandHan
             await _cameraService.AddAsync(camera);
             await _cameraService.SaveChangesAsync();
 
-            return $"SUCCESS|{JsonSerializer.Serialize(camera)}";
+            // Configurar opciones de serialización para evitar ciclos de referencia
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+
+            return $"SUCCESS|{JsonSerializer.Serialize(camera, options)}";
         }
         catch (Exception ex)
         {
@@ -78,7 +85,15 @@ public class CameraCommandHandler(ICameraService cameraService) : ITcpCommandHan
         {
             var cameras = await _cameraService.GetByUserIdAsync(userId);
 
-            return $"SUCCESS|{JsonSerializer.Serialize(cameras)}";
+            // Configurar opciones de serialización para evitar ciclos de referencia
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+                WriteIndented = false
+            };
+
+            return $"SUCCESS|{JsonSerializer.Serialize(cameras, options)}";
         }
         catch (Exception ex)
         {
@@ -127,7 +142,14 @@ public class CameraCommandHandler(ICameraService cameraService) : ITcpCommandHan
             _cameraService.Update(camera);
             await _cameraService.SaveChangesAsync();
 
-            return $"SUCCESS|{JsonSerializer.Serialize(camera)}";
+            // Configurar opciones de serialización para evitar ciclos de referencia
+            var options = new JsonSerializerOptions
+            {
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+
+            return $"SUCCESS|{JsonSerializer.Serialize(camera, options)}";
         }
         catch (Exception ex)
         {

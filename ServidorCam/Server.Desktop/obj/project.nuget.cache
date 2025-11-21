@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Ii3HD21sBOc=",
+  "dgSpecHash": "I31DoUOhpIg=",
   "success": true,
   "projectFilePath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Desktop\\Server.Desktop.csproj",
   "expectedPackageFiles": [
@@ -52,6 +52,7 @@
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4\\4.11.0.20250507\\opencvsharp4.4.11.0.20250507.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4.runtime.win\\4.11.0.20250507\\opencvsharp4.runtime.win.4.11.0.20250507.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4_.runtime.ubuntu.20.04-x64\\4.10.0.20240616\\opencvsharp4_.runtime.ubuntu.20.04-x64.4.10.0.20240616.nupkg.sha512",
+    "C:\\Users\\mayko\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\9.0.0\\pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\reactiveui\\20.1.1\\reactiveui.20.1.1.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\scrutor\\6.1.0\\scrutor.6.1.0.nupkg.sha512",
@@ -61,6 +62,7 @@
     "C:\\Users\\mayko\\.nuget\\packages\\skiasharp.nativeassets.webassembly\\2.88.9\\skiasharp.nativeassets.webassembly.2.88.9.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\skiasharp.nativeassets.win32\\2.88.9\\skiasharp.nativeassets.win32.2.88.9.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\splat\\15.1.1\\splat.15.1.1.nupkg.sha512",
+    "C:\\Users\\mayko\\.nuget\\packages\\stackexchange.redis\\2.9.32\\stackexchange.redis.2.9.32.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.io.pipelines\\8.0.0\\system.io.pipelines.8.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.memory\\4.6.3\\system.memory.4.6.3.nupkg.sha512",

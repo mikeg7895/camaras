@@ -6,4 +6,5 @@ public interface ICameraService : IGenericService<Camera>
 {
     Task<IEnumerable<Camera>> GetByUserIdAsync(int userId);
     Task<Camera?> GetByDeviceIdAsync(Guid deviceId);
+    Task<Camera?> GetCameraWithDetailsAsync(int cameraId);
 }

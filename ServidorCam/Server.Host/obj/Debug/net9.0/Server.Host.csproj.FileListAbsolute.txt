@@ -458,3 +458,5 @@ C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\obj\Debug\net
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\obj\Debug\net9.0\Server.Host.pdb
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\obj\Debug\net9.0\Server.Host.genruntimeconfig.cache
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\obj\Debug\net9.0\ref\Server.Host.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\bin\Debug\net9.0\Pipelines.Sockets.Unofficial.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Host\bin\Debug\net9.0\StackExchange.Redis.dll

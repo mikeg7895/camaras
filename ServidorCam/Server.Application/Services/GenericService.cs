@@ -1,6 +1,7 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Server.Application.Interfaces;
 using Server.Core.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Server.Application.Services;
 
@@ -19,10 +20,7 @@ public abstract class GenericService<T>(IGenericRepository<T> repository) : IGen
         return await _repository.GetByIdAsync(id);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
-    {
-        return await _repository.GetAll().ToListAsync();
-    }
+    public async Task<IEnumerable<T>> GetAllAsync() => await _repository.GetAllAsync();
 
     public void Update(T valor)
     {

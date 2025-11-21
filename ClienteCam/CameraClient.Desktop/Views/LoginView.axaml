@@ -29,6 +29,14 @@
                                FontWeight="SemiBold"
                                HorizontalAlignment="Center"/>
                     
+                    <!-- Server Host -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Server Host" FontWeight="Medium"/>
+                        <TextBox Text="{Binding ServerHost}" 
+                                 Watermark="localhost or IP address"
+                                 Padding="12"/>
+                    </StackPanel>
+                    
                     <!-- Email -->
                     <StackPanel Spacing="8">
                         <TextBlock Text="Email" FontWeight="Medium"/>

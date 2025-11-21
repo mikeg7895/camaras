@@ -1,33 +1,27 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CameraClient.Desktop.Models;
 
 namespace CameraClient.Desktop.Services;
 
-public class CameraService : IDisposable
+public class CameraService
 {
-    private const string ServerHost = "localhost";
-    private const int ServerPort = 5000;
-    private TcpClient? _client;
-    private StreamReader? _reader;
-    private StreamWriter? _writer;
+    private readonly TcpConnectionService _connectionService;
+
+    public CameraService(TcpConnectionService connectionService)
+    {
+        _connectionService = connectionService;
+    }
 
     public async Task<CameraResponse> RegisterCameraAsync(string name, Guid deviceId, int cameraIndex, int userId)
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: CAMERA|REGISTER|name|deviceId|cameraIndex|userId
             var command = $"CAMERA|REGISTER|{name}|{deviceId}|{cameraIndex}|{userId}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -42,7 +36,6 @@ public class CameraService : IDisposable
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new CameraResponse 
             { 
                 Success = false, 
@@ -55,13 +48,9 @@ public class CameraService : IDisposable
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: CAMERA|GET|userId
             var command = $"CAMERA|GET|{userId}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -76,7 +65,6 @@ public class CameraService : IDisposable
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new CameraResponse 
             { 
                 Success = false, 
@@ -89,13 +77,9 @@ public class CameraService : IDisposable
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: CAMERA|UPDATE|cameraId|name
             var command = $"CAMERA|UPDATE|{cameraId}|{name}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -110,7 +94,6 @@ public class CameraService : IDisposable
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new CameraResponse 
             { 
                 Success = false, 
@@ -123,13 +106,9 @@ public class CameraService : IDisposable
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: CAMERA|DELETE|cameraId
             var command = $"CAMERA|DELETE|{cameraId}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -144,26 +123,12 @@ public class CameraService : IDisposable
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new CameraResponse 
             { 
                 Success = false, 
                 Message = $"Connection error: {ex.Message}" 
             };
         }
-    }
-
-    private async Task EnsureConnectedAsync()
-    {
-        if (_client?.Connected == true)
-            return;
-
-        _client = new TcpClient();
-        await _client.ConnectAsync(ServerHost, ServerPort);
-
-        var stream = _client.GetStream();
-        _reader = new StreamReader(stream, Encoding.UTF8);
-        _writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
     }
 
     private CameraResponse ParseCameraResponse(string response)
@@ -290,26 +255,4 @@ public class CameraService : IDisposable
         };
     }
 
-    private void Disconnect()
-    {
-        try
-        {
-            _reader?.Dispose();
-            _writer?.Dispose();
-            _client?.Close();
-        }
-        catch { }
-        finally
-        {
-            _reader = null;
-            _writer = null;
-            _client = null;
-        }
-    }
-
-    public void Dispose()
-    {
-        Disconnect();
-        GC.SuppressFinalize(this);
-    }
 }

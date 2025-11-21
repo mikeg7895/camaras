@@ -1,0 +1,68 @@
+@model Server.Web.Models.UserListViewModel
+@{
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>👥 Listado de Usuarios</h1>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            @if (Model.Users.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Usuario</th>
+                                <th>Email</th>
+                                <th>Estado</th>
+                                <th>Último Acceso</th>
+                                <th>Cámaras</th>
+                                <th>Videos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <td>@user.Id</td>
+                                    <td><strong>@user.Username</strong></td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        @if (user.Approved)
+                                        {
+                                            <span class="badge bg-success">Aprobado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">Pendiente</span>
+                                        }
+                                    </td>
+                                    <td>@user.LastLogin.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td><span class="badge bg-primary">@user.CamerasCount</span></td>
+                                    <td><span class="badge bg-info">@user.TotalVideos</span></td>
+                                    <td>
+                                        <a asp-controller="Cameras" asp-action="Index" asp-route-userId="@user.Id" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-camera-video"></i> Ver Cámaras
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay usuarios registrados en el sistema.
+                </div>
+            }
+        </div>
+    </div>
+</div>

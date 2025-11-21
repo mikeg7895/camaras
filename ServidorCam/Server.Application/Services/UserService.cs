@@ -1,4 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Server.Application.Interfaces;
 using Server.Core.Domain.Entities;
 using Server.Core.Domain.Interfaces;
@@ -8,12 +9,7 @@ namespace Server.Application.Services;
 public class UserService(IUserRepository repository) : GenericService<User>(repository), IUserService
 {
     public async Task<IEnumerable<User>> GetUsersWithApproved(bool approved)
-    {
-        return await ((IUserRepository)_repository)
-            .GetAll()
-            .Where(u => u.Approved == approved)
-            .ToListAsync();
-    }
+        => await ((IUserRepository)_repository).GetByApprovalStatusAsync(approved);
 
     public async Task<User?> ApproveUser(int id)
     {
@@ -27,4 +23,7 @@ public class UserService(IUserRepository repository) : GenericService<User>(repo
         }
         return null;
     }
+
+    public async Task<IEnumerable<User>> GetAllUsersAsync()
+        => await ((IUserRepository)_repository).GetAllWithCamerasAsync();
 }

@@ -1,32 +1,26 @@
 using System;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CameraClient.Desktop.Models;
 
 namespace CameraClient.Desktop.Services;
 
-public class AuthService : IDisposable
+public class AuthService
 {
-    private const string ServerHost = "localhost";
-    private const int ServerPort = 5000;
-    private TcpClient? _client;
-    private StreamReader? _reader;
-    private StreamWriter? _writer;
+    private readonly TcpConnectionService _connectionService;
+
+    public AuthService(TcpConnectionService connectionService)
+    {
+        _connectionService = connectionService;
+    }
 
     public async Task<AuthResponse> LoginAsync(LoginRequest request)
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: LOGIN|email|password
             var command = $"LOGIN|{request.Email}|{request.Password}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -37,11 +31,18 @@ public class AuthService : IDisposable
                 };
             }
 
-            return ParseLoginResponse(response, request.Email);
+            var authResponse = ParseLoginResponse(response, request.Email);
+            
+            // Marcar como autenticado si fue exitoso
+            if (authResponse.Success)
+            {
+                _connectionService.SetAuthenticated(true);
+            }
+            
+            return authResponse;
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new AuthResponse 
             { 
                 Success = false, 
@@ -54,13 +55,9 @@ public class AuthService : IDisposable
     {
         try
         {
-            await EnsureConnectedAsync();
-
             // Formato: REGISTER|username|email|password
             var command = $"REGISTER|{request.Username}|{request.Email}|{request.Password}";
-            await _writer!.WriteLineAsync(command);
-
-            var response = await _reader!.ReadLineAsync();
+            var response = await _connectionService.SendCommandAsync(command);
             
             if (string.IsNullOrEmpty(response))
             {
@@ -75,26 +72,12 @@ public class AuthService : IDisposable
         }
         catch (Exception ex)
         {
-            Disconnect();
             return new AuthResponse 
             { 
                 Success = false, 
                 Message = $"Connection error: {ex.Message}" 
             };
         }
-    }
-
-    private async Task EnsureConnectedAsync()
-    {
-        if (_client?.Connected == true)
-            return;
-
-        _client = new TcpClient();
-        await _client.ConnectAsync(ServerHost, ServerPort);
-
-        var stream = _client.GetStream();
-        _reader = new StreamReader(stream, Encoding.UTF8);
-        _writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
     }
 
     private AuthResponse ParseLoginResponse(string response, string email)
@@ -170,26 +153,9 @@ public class AuthService : IDisposable
         };
     }
 
-    private void Disconnect()
+    public void Logout()
     {
-        try
-        {
-            _reader?.Dispose();
-            _writer?.Dispose();
-            _client?.Close();
-        }
-        catch { }
-        finally
-        {
-            _reader = null;
-            _writer = null;
-            _client = null;
-        }
-    }
-
-    public void Dispose()
-    {
-        Disconnect();
-        GC.SuppressFinalize(this);
+        _connectionService.SetAuthenticated(false);
+        _connectionService.Disconnect();
     }
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using CameraClient.Desktop.Models;
 using CameraClient.Desktop.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CameraClient.Desktop.ViewModels;
 
@@ -24,7 +25,7 @@ public class RegisterViewModel : ViewModelBase
 
     public RegisterViewModel()
     {
-        _authService = new AuthService();
+        _authService = App.Services!.GetRequiredService<AuthService>();
         _mainThreadScheduler = RxApp.MainThreadScheduler;
         
         RegisterCommand = ReactiveCommand.CreateFromTask(

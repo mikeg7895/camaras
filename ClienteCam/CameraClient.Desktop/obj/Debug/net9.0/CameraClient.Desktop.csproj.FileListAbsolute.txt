@@ -251,3 +251,5 @@ C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\obj\D
 C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\bin\Debug\net9.0\System.CodeDom.dll
 C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\bin\Debug\net9.0\System.Management.dll
 C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\bin\Debug\net9.0\runtimes\win\lib\net9.0\System.Management.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\mayko\OneDrive\Escritorio\camaras\ClienteCam\CameraClient.Desktop\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll

@@ -1,4 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Server.Application.Interfaces;
 using Server.Core.Domain.Entities;
 using Server.Core.Domain.Interfaces;
@@ -10,9 +12,11 @@ public class CameraService(ICameraRepository repository) : GenericService<Camera
     private readonly ICameraRepository _cameraRepository = repository;
 
     public async Task<IEnumerable<Camera>> GetByUserIdAsync(int userId) 
-        => await _cameraRepository.GetAll().Where(c => c.UserId == userId).ToListAsync();
+        => await _cameraRepository.GetByUserIdAsync(userId);
 
     public async Task<Camera?> GetByDeviceIdAsync(Guid deviceId) 
-        => await _cameraRepository.GetAll().Where(c => c.DeviceId == deviceId).FirstOrDefaultAsync(); 
+        => await _cameraRepository.GetByDeviceIdAsync(deviceId); 
 
+    public async Task<Camera?> GetCameraWithDetailsAsync(int cameraId)
+        => await _cameraRepository.GetCameraWithDetailsAsync(cameraId);
 }

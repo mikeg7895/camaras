@@ -10,12 +10,15 @@ using ReactiveUI;
 using CameraClient.Desktop.Models;
 using CameraClient.Desktop.Services;
 using static CameraClient.Desktop.Services.CameraDetectionService;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CameraClient.Desktop.ViewModels;
 
 public class DashboardViewModel : ViewModelBase, IDisposable
 {
+    private readonly AuthService _authService;
     private readonly CameraService _cameraService;
+    private readonly VideoRecordingService _videoRecordingService;
     private readonly IScheduler _mainThreadScheduler;
     private readonly User _currentUser;
     private readonly Guid _currentDeviceId;
@@ -30,7 +33,9 @@ public class DashboardViewModel : ViewModelBase, IDisposable
     public DashboardViewModel(User user)
     {
         _currentUser = user;
-        _cameraService = new CameraService();
+        _authService = App.Services!.GetRequiredService<AuthService>();
+        _cameraService = App.Services!.GetRequiredService<CameraService>();
+        _videoRecordingService = App.Services!.GetRequiredService<VideoRecordingService>();
         
         // Obtener el Device ID actual
         _currentDeviceId = DeviceIdentityService.GetOrCreateDeviceId();
@@ -307,6 +312,9 @@ public class DashboardViewModel : ViewModelBase, IDisposable
 
     private void ExecuteLogout()
     {
+        // Cerrar la conexión TCP
+        _authService.Logout();
+        
         RaiseLogoutRequested();
     }
 
@@ -328,10 +336,10 @@ public class DashboardViewModel : ViewModelBase, IDisposable
         {
             SetStatusMessage($"Starting recording for {camera.Name}...");
 
-            // Crear servicio de grabación si no existe
+            // Crear servicio de grabación si no existe (reutilizamos el VideoRecordingService compartido)
             if (!_recordingServices.ContainsKey(camera.Id))
             {
-                _recordingServices[camera.Id] = new VideoRecordingService();
+                _recordingServices[camera.Id] = _videoRecordingService;
             }
 
             var recordingService = _recordingServices[camera.Id];
@@ -439,7 +447,7 @@ public class DashboardViewModel : ViewModelBase, IDisposable
         }
         _recordingServices.Clear();
 
-        _cameraService.Dispose();
+        // Los servicios ya no necesitan dispose porque son singletons manejados por DI
         GC.SuppressFinalize(this);
     }
 }

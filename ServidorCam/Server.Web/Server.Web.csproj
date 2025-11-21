@@ -6,4 +6,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Server.Application\Server.Application.csproj" />
+    <ProjectReference Include="..\Server.Infrastructure\Server.Infrastructure.csproj" />
+    <ProjectReference Include="..\Server.Core\Server.Core.csproj" />
+  </ItemGroup>
+
 </Project>

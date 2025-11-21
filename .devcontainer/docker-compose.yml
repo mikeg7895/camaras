@@ -14,6 +14,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5000;https://+:5001
       - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=securitycam;User=root;Password=dev_password;AllowPublicKeyRetrieval=True;SslMode=None;
+      - ConnectionStrings__Redis=redis:6379,password=dev_password,defaultDatabase=0
     ports:
       - "5000:5000"
       - "5001:5001"
@@ -50,12 +51,33 @@ services:
       retries: 5
       start_period: 30s
 
+  # Servicio de Redis
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+    command: redis-server --appendonly yes --requirepass dev_password
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
 networks:
   app-network:
     driver: bridge
 
 volumes:
   mysql-data:
+    driver: local
+  redis-data:
     driver: local
   dotnet-tools:
     driver: local

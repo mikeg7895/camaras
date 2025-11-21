@@ -74,6 +74,10 @@
               "target": "Package",
               "version": "[11.3.8, )"
             },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "OpenCvSharp4": {
               "target": "Package",
               "version": "[4.10.0.20240616, )"

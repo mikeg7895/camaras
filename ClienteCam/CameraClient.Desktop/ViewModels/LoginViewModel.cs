@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using ReactiveUI;
 using CameraClient.Desktop.Models;
 using CameraClient.Desktop.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CameraClient.Desktop.ViewModels;
 
 public class LoginViewModel : ViewModelBase
 {
     private readonly AuthService _authService;
+    private readonly TcpConnectionService _connectionService;
+    private string _serverHost = "localhost";
     private string _email = string.Empty;
     private string _password = string.Empty;
     private string _errorMessage = string.Empty;
@@ -21,7 +24,8 @@ public class LoginViewModel : ViewModelBase
 
     public LoginViewModel()
     {
-        _authService = new AuthService();
+        _authService = App.Services!.GetRequiredService<AuthService>();
+        _connectionService = App.Services!.GetRequiredService<TcpConnectionService>();
         _mainThreadScheduler = RxApp.MainThreadScheduler;
         
         LoginCommand = ReactiveCommand.CreateFromTask(
@@ -34,6 +38,12 @@ public class LoginViewModel : ViewModelBase
 
         LoginCommand.IsExecuting
             .ToProperty(this, x => x.IsLoading, out _isLoading, scheduler: RxApp.MainThreadScheduler);
+    }
+
+    public string ServerHost
+    {
+        get => _serverHost;
+        set => this.RaiseAndSetIfChanged(ref _serverHost, value);
     }
 
     public string Email
@@ -66,6 +76,12 @@ public class LoginViewModel : ViewModelBase
     {
         SetErrorMessage(string.Empty);
         
+        if (string.IsNullOrWhiteSpace(ServerHost))
+        {
+            SetErrorMessage("Please enter server host");
+            return;
+        }
+        
         if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
         {
             SetErrorMessage("Please enter email and password");
@@ -74,6 +90,9 @@ public class LoginViewModel : ViewModelBase
 
         try
         {
+            // Configurar el host del servidor antes de conectar
+            _connectionService.SetServerHost(ServerHost);
+            
             var request = new LoginRequest
             {
                 Email = Email,

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Server.Core.Domain.Interfaces;
 using Server.Infrastructure.Persistence;
@@ -23,6 +24,8 @@ public abstract class GenericRepository<T> : IGenericRepository<T> where T : cla
     public virtual async Task<T?> GetByIdAsync(int id)  => await Entities.FindAsync(id);
 
     public virtual IQueryable<T> GetAll() => Entities;
+
+    public virtual async Task<IEnumerable<T>> GetAllAsync() => await Entities.ToListAsync();
 
     public virtual void Update(T valor)
     {

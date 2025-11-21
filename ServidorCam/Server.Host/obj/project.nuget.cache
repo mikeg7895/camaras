@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "p54kVoD1VHU=",
+  "dgSpecHash": "EpeXkfYNFyU=",
   "success": true,
   "projectFilePath": "C:\\Users\\mayko\\OneDrive\\Escritorio\\camaras\\ServidorCam\\Server.Host\\Server.Host.csproj",
   "expectedPackageFiles": [
@@ -55,8 +55,10 @@
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4\\4.11.0.20250507\\opencvsharp4.4.11.0.20250507.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4.runtime.win\\4.11.0.20250507\\opencvsharp4.runtime.win.4.11.0.20250507.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\opencvsharp4_.runtime.ubuntu.20.04-x64\\4.10.0.20240616\\opencvsharp4_.runtime.ubuntu.20.04-x64.4.10.0.20240616.nupkg.sha512",
+    "C:\\Users\\mayko\\.nuget\\packages\\pipelines.sockets.unofficial\\2.2.8\\pipelines.sockets.unofficial.2.2.8.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\pomelo.entityframeworkcore.mysql\\9.0.0\\pomelo.entityframeworkcore.mysql.9.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\scrutor\\6.1.0\\scrutor.6.1.0.nupkg.sha512",
+    "C:\\Users\\mayko\\.nuget\\packages\\stackexchange.redis\\2.9.32\\stackexchange.redis.2.9.32.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.collections.immutable\\7.0.0\\system.collections.immutable.7.0.0.nupkg.sha512",
     "C:\\Users\\mayko\\.nuget\\packages\\system.composition\\7.0.0\\system.composition.7.0.0.nupkg.sha512",

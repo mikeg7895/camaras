@@ -55,6 +55,7 @@ C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.2\ref\net9.0\mscorli
 C:\Users\mayko\.nuget\packages\mysqlconnector\2.4.0\lib\net9.0\MySqlConnector.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.2\ref\net9.0\netstandard.dll
 C:\Users\mayko\.nuget\packages\opencvsharp4\4.11.0.20250507\lib\net6.0\OpenCvSharp.dll
+C:\Users\mayko\.nuget\packages\pipelines.sockets.unofficial\2.2.8\lib\net5.0\Pipelines.Sockets.Unofficial.dll
 C:\Users\mayko\.nuget\packages\pomelo.entityframeworkcore.mysql\9.0.0\lib\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
 C:\Users\mayko\.nuget\packages\reactiveui\20.1.1\lib\net8.0\ReactiveUI.dll
 C:\Users\mayko\.nuget\packages\scrutor\6.1.0\lib\net8.0\Scrutor.dll
@@ -63,6 +64,7 @@ C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Core\obj\Debug\net
 C:\Users\mayko\OneDrive\Escritorio\camaras\ServidorCam\Server.Infrastructure\obj\Debug\net9.0\ref\Server.Infrastructure.dll
 C:\Users\mayko\.nuget\packages\skiasharp\2.88.9\lib\net6.0\SkiaSharp.dll
 C:\Users\mayko\.nuget\packages\splat\15.1.1\lib\net8.0\Splat.dll
+C:\Users\mayko\.nuget\packages\stackexchange.redis\2.9.32\lib\net8.0\StackExchange.Redis.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.2\ref\net9.0\System.AppContext.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.2\ref\net9.0\System.Buffers.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\9.0.2\ref\net9.0\System.Collections.Concurrent.dll

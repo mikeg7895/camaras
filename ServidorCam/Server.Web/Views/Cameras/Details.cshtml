@@ -1,0 +1,165 @@
+@model Server.Web.Models.CameraDetailViewModel
+@{
+    ViewData["Title"] = "Detalles de Cámara";
+}
+
+<div class="container-fluid">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Dashboard</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Cameras" asp-action="Index">Cámaras</a></li>
+            <li class="breadcrumb-item active">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">📹 @Model.Name</h1>
+
+    <!-- Información de la cámara -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header @(Model.Status ? "bg-success" : "bg-secondary") text-white">
+                    <h5 class="mb-0">Información de la Cámara</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>ID:</strong> @Model.Id</p>
+                            <p><strong>Estado:</strong> <span class="badge @(Model.Status ? "bg-success" : "bg-secondary")">@Model.StatusText</span></p>
+                            <p><strong>Device ID:</strong> <code>@Model.DeviceId</code></p>
+                            <p><strong>Índice de Cámara:</strong> @Model.CameraIndex</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Propietario:</strong> @Model.OwnerUsername</p>
+                            <p><strong>Email:</strong> @Model.OwnerEmail</p>
+                            <p><strong>Total de Videos:</strong> <span class="badge bg-info">@Model.TotalVideos</span></p>
+                            <p><strong>Frames Procesados:</strong> <span class="badge bg-warning">@Model.TotalProcessedFrames</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Estadísticas</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <h2 class="display-4 text-info">@Model.TotalVideos</h2>
+                        <p class="text-muted">Videos Grabados</p>
+                    </div>
+                    <div>
+                        <h2 class="display-4 text-warning">@Model.TotalProcessedFrames</h2>
+                        <p class="text-muted">Frames Procesados</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Listado de Videos -->
+    <div class="card shadow">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">📁 Archivos de Video</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.Videos.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Tamaño</th>
+                                <th>Fecha de Grabación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var video in Model.Videos)
+                            {
+                                <tr>
+                                    <td>
+                                        <i class="bi bi-file-earmark-play"></i>
+                                        @video.FileName
+                                    </td>
+                                    <td><span class="badge bg-info">@video.FileSizeFormatted</span></td>
+                                    <td>@video.RecordedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-controller="Cameras" asp-action="DownloadVideo" asp-route-id="@video.VideoId" class="btn btn-sm btn-success">
+                                                <i class="bi bi-download"></i> Descargar
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#videoModal" 
+                                                    data-video-id="@video.VideoId" data-video-name="@video.FileName">
+                                                <i class="bi bi-play-circle"></i> Ver
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No hay videos disponibles para esta cámara.
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Modal para visualizar video -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Vista Previa de Video</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <video id="videoPlayer" controls style="max-width: 100%; max-height: 500px;">
+                    <source id="videoSource" src="" type="video/mp4">
+                    Tu navegador no soporta el elemento de video.
+                </video>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var videoModal = document.getElementById('videoModal');
+        videoModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var videoId = button.getAttribute('data-video-id');
+            var videoName = button.getAttribute('data-video-name');
+            var modalTitle = videoModal.querySelector('.modal-title');
+            modalTitle.textContent = 'Vista Previa: ' + videoName;
+            
+            // Configurar la fuente del video usando el endpoint de streaming
+            var videoPlayer = document.getElementById('videoPlayer');
+            var videoSource = document.getElementById('videoSource');
+            videoSource.src = '/Cameras/StreamVideo/' + videoId;
+            videoPlayer.load();
+        });
+        
+        videoModal.addEventListener('hide.bs.modal', function (event) {
+            var video = document.getElementById('videoPlayer');
+            video.pause();
+            video.currentTime = 0;
+            // Limpiar la fuente del video
+            var videoSource = document.getElementById('videoSource');
+            videoSource.src = '';
+            video.load();
+        });
+    </script>
+}

@@ -12,7 +12,8 @@
           "Microsoft.EntityFrameworkCore.Design": "9.0.10",
           "Pomelo.EntityFrameworkCore.MySql": "9.0.0",
           "Server.Application": "1.0.0",
-          "Server.Core": "1.0.0"
+          "Server.Core": "1.0.0",
+          "StackExchange.Redis": "2.9.32"
         },
         "runtime": {
           "Server.Infrastructure.dll": {}
@@ -565,6 +566,17 @@
           }
         }
       },
+      "Pipelines.Sockets.Unofficial/2.2.8": {
+        "dependencies": {
+          "System.IO.Pipelines": "7.0.0"
+        },
+        "runtime": {
+          "lib/net5.0/Pipelines.Sockets.Unofficial.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "2.2.8.1080"
+          }
+        }
+      },
       "Pomelo.EntityFrameworkCore.MySql/9.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Relational": "9.0.10",
@@ -586,6 +598,18 @@
           "lib/net8.0/Scrutor.dll": {
             "assemblyVersion": "6.0.0.0",
             "fileVersion": "6.0.0.0"
+          }
+        }
+      },
+      "StackExchange.Redis/2.9.32": {
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.10",
+          "Pipelines.Sockets.Unofficial": "2.2.8"
+        },
+        "runtime": {
+          "lib/net8.0/StackExchange.Redis.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.9.32.54708"
           }
         }
       },
@@ -926,6 +950,13 @@
       "path": "opencvsharp4_.runtime.ubuntu.20.04-x64/4.10.0.20240616",
       "hashPath": "opencvsharp4_.runtime.ubuntu.20.04-x64.4.10.0.20240616.nupkg.sha512"
     },
+    "Pipelines.Sockets.Unofficial/2.2.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zG2FApP5zxSx6OcdJQLbZDk2AVlN2BNQD6MorwIfV6gVj0RRxWPEp2LXAxqDGZqeNV1Zp0BNPcNaey/GXmTdvQ==",
+      "path": "pipelines.sockets.unofficial/2.2.8",
+      "hashPath": "pipelines.sockets.unofficial.2.2.8.nupkg.sha512"
+    },
     "Pomelo.EntityFrameworkCore.MySql/9.0.0": {
       "type": "package",
       "serviceable": true,
@@ -939,6 +970,13 @@
       "sha512": "sha512-m4+0RdgnX+jeiaqteq9x5SwEtuCjWG0KTw1jBjCzn7V8mCanXKoeF8+59E0fcoRbAjdEq6YqHFCmxZ49Kvqp3g==",
       "path": "scrutor/6.1.0",
       "hashPath": "scrutor.6.1.0.nupkg.sha512"
+    },
+    "StackExchange.Redis/2.9.32": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j5Rjbf7gWz5izrn0UWQy9RlQY4cQDPkwJfVqATnVsOa/+zzJrps12LOgacMsDl/Vit2f01cDiDkG/Rst8v2iGw==",
+      "path": "stackexchange.redis/2.9.32",
+      "hashPath": "stackexchange.redis.2.9.32.nupkg.sha512"
     },
     "System.CodeDom/6.0.0": {
       "type": "package",

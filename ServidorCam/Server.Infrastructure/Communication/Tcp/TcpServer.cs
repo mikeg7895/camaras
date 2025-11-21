@@ -48,10 +48,14 @@ public class TcpServer(IServiceProvider serviceProvider, ILogger<TcpServer> logg
     private async Task ProcessClientAsync(TcpClient client, CancellationToken cancellationToken)
     {
         var remoteEndPoint = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
+        var ipAddress = remoteEndPoint.Split(':')[0]; // Extraer solo la IP
         _logger.LogInformation("Client connected from {RemoteEndPoint}", remoteEndPoint);
 
         using var scope = _serviceProvider.CreateScope();
         var requestHandler = scope.ServiceProvider.GetRequiredService<ITcpRequestHandler>();
+        var connectionTracker = scope.ServiceProvider.GetRequiredService<IConnectionTrackingService>();
+        
+        string? authenticatedUsername = null;
 
         try
         {
@@ -109,6 +113,18 @@ public class TcpServer(IServiceProvider serviceProvider, ILogger<TcpServer> logg
                     
                     _logger.LogInformation("Response to {RemoteEndPoint}: {Response}", remoteEndPoint, response);
                     await writer.WriteLineAsync(response);
+                    
+                    // Si es un LOGIN exitoso, registrar la conexión
+                    if (cmd == "LOGIN" && response.StartsWith("SUCCESS"))
+                    {
+                        // El username está en parts[1]
+                        if (parts.Length >= 2)
+                        {
+                            authenticatedUsername = parts[1];
+                            connectionTracker.RegisterConnection(authenticatedUsername, ipAddress);
+                            _logger.LogInformation("User {Username} authenticated from {IpAddress}", authenticatedUsername, ipAddress);
+                        }
+                    }
                 }
             }
         }
@@ -118,6 +134,12 @@ public class TcpServer(IServiceProvider serviceProvider, ILogger<TcpServer> logg
         }
         finally
         {
+            // Desregistrar la conexión si el usuario estaba autenticado
+            if (authenticatedUsername != null)
+            {
+                connectionTracker.UnregisterConnection(authenticatedUsername, ipAddress);
+            }
+            
             client.Close();
             _logger.LogInformation("Client disconnected: {RemoteEndPoint}", remoteEndPoint);
         }
